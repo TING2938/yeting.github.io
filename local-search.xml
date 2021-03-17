@@ -134,6 +134,12 @@
     <content type="html"><![CDATA[<ol><li><p>插入公式</p><p> 在Word 2013及以上版本中按下<code>Alt + =</code>后即可插入公式。</p></li><li><p>为公式自动编号</p><p>在公式后面输入<code>#(1)</code>后<code>Enter</code>即可为公式编号</p><p> $a^{2}+b^{2}=c^{2}$ #(1) </p><p>如果公式较多，可以利用Word中<code>引用-&gt;插入题注</code>为公式自动更新编号：</p><ul><li><p>输入公式时，所有公式的编号都用一个特定符号来表示，如<code>NUM</code></p><p>$a^{2}+b^{2}=c^{2}$ #(NUM) </p></li></ul></li></ol><ul><li><p>在任意空白位置插入题注</p><p><img src="/images/Word1.png" srcset="/img/loading.gif" alt=""></p></li><li><p>打开<code>替换</code>面板，将<code>NUM</code>替换成上面新建的题注，由于替换面板中无法包含题注格式，这时可以先将上面的题注复制到剪贴板上，然后将替换项表示为<code>^c</code>(这表示剪贴板内容)</p><p><img src="/images/Word2.png" srcset="/img/loading.gif" alt=""></p></li><li><p><code>Ctrl+A</code>选中全文，右键<code>更新域</code>即可显示为正常的连续编号</p></li></ul>]]></content>
     
     
+    <categories>
+      
+      <category>Office</category>
+      
+    </categories>
+    
     
     <tags>
       
