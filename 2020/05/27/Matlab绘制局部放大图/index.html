@@ -143,7 +143,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    140 字
+                    139 字
                   </span>
                 
 
@@ -183,29 +183,7 @@
             
             <article class="markdown-body">
               <p>可以采用<code>axes</code>函数在当前图中插入一个小图的方法绘制局部放大图。<br>如下代码：</p>
-<pre><code class="hljs matlab">func = &#123;@(x) <span class="hljs-built_in">sin</span>(x), @(x) <span class="hljs-built_in">cos</span>(x)&#125;;
-x = <span class="hljs-built_in">linspace</span>(<span class="hljs-number">0</span>, <span class="hljs-number">15</span>);
-
-<span class="hljs-built_in">figure</span>;
-ax1 = axes(<span class="hljs-string">'Position'</span>, [<span class="hljs-number">0.11</span>, <span class="hljs-number">0.15</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.8</span>]); <span class="hljs-comment">% 主图</span>
-ax2 = axes(<span class="hljs-string">'Position'</span>, [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.65</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.25</span>]); <span class="hljs-comment">% 局部图</span>
-
-<span class="hljs-keyword">for</span> <span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>:<span class="hljs-built_in">length</span>(func)
-    <span class="hljs-built_in">plot</span>(ax1, x, func&#123;<span class="hljs-built_in">i</span>&#125;(x));
-    <span class="hljs-built_in">hold</span>(ax1, <span class="hljs-string">'on'</span>);
-
-    <span class="hljs-built_in">plot</span>(ax2, x, func&#123;<span class="hljs-built_in">i</span>&#125;(x));
-    <span class="hljs-built_in">hold</span>(ax2, <span class="hljs-string">'on'</span>);
-<span class="hljs-keyword">end</span>
-
-xlim(ax1, [<span class="hljs-number">0</span>, <span class="hljs-number">15</span>])
-ylim(ax1, [<span class="hljs-number">-1</span>, <span class="hljs-number">3</span>])
-xlabel(ax1, <span class="hljs-string">'$x$'</span>, <span class="hljs-string">'Interpreter'</span>, <span class="hljs-string">'latex'</span>);
-ylabel(ax1, <span class="hljs-string">'$y$'</span>, <span class="hljs-string">'Interpreter'</span>, <span class="hljs-string">'latex'</span>);
-<span class="hljs-built_in">legend</span>(ax1, &#123;<span class="hljs-string">'$sin$'</span>, <span class="hljs-string">'$cos$'</span>&#125;, <span class="hljs-string">'Location'</span>, <span class="hljs-string">'northwest'</span>, <span class="hljs-string">'Interpreter'</span>, <span class="hljs-string">'latex'</span>)
-
-xlim(ax2, [<span class="hljs-number">2</span>, <span class="hljs-number">6</span>])
-ylim(ax2, [<span class="hljs-number">-1</span>, <span class="hljs-number">-0.3</span>])</code></pre>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><code class="hljs matlab">func = &#123;@(x) <span class="hljs-built_in">sin</span>(x), @(x) <span class="hljs-built_in">cos</span>(x)&#125;;<br>x = <span class="hljs-built_in">linspace</span>(<span class="hljs-number">0</span>, <span class="hljs-number">15</span>);<br><br><span class="hljs-built_in">figure</span>;<br>ax1 = axes(<span class="hljs-string">'Position'</span>, [<span class="hljs-number">0.11</span>, <span class="hljs-number">0.15</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.8</span>]); <span class="hljs-comment">% 主图</span><br>ax2 = axes(<span class="hljs-string">'Position'</span>, [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.65</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.25</span>]); <span class="hljs-comment">% 局部图</span><br><br><span class="hljs-keyword">for</span> <span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>:<span class="hljs-built_in">length</span>(func)<br>    <span class="hljs-built_in">plot</span>(ax1, x, func&#123;<span class="hljs-built_in">i</span>&#125;(x));<br>    <span class="hljs-built_in">hold</span>(ax1, <span class="hljs-string">'on'</span>);<br><br>    <span class="hljs-built_in">plot</span>(ax2, x, func&#123;<span class="hljs-built_in">i</span>&#125;(x));<br>    <span class="hljs-built_in">hold</span>(ax2, <span class="hljs-string">'on'</span>);<br><span class="hljs-keyword">end</span><br><br>xlim(ax1, [<span class="hljs-number">0</span>, <span class="hljs-number">15</span>])<br>ylim(ax1, [<span class="hljs-number">-1</span>, <span class="hljs-number">3</span>])<br>xlabel(ax1, <span class="hljs-string">'$x$'</span>, <span class="hljs-string">'Interpreter'</span>, <span class="hljs-string">'latex'</span>);<br>ylabel(ax1, <span class="hljs-string">'$y$'</span>, <span class="hljs-string">'Interpreter'</span>, <span class="hljs-string">'latex'</span>);<br><span class="hljs-built_in">legend</span>(ax1, &#123;<span class="hljs-string">'$sin$'</span>, <span class="hljs-string">'$cos$'</span>&#125;, <span class="hljs-string">'Location'</span>, <span class="hljs-string">'northwest'</span>, <span class="hljs-string">'Interpreter'</span>, <span class="hljs-string">'latex'</span>)<br><br>xlim(ax2, [<span class="hljs-number">2</span>, <span class="hljs-number">6</span>])<br>ylim(ax2, [<span class="hljs-number">-1</span>, <span class="hljs-number">-0.3</span>])<br></code></pre></td></tr></table></figure>
 
 <p>输出：</p>
 <div align=center>

@@ -210,34 +210,7 @@
 </ul>
 <h2 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h2><ol>
 <li><p>打开Qt Creator，新建一个QWidget项目，创建一个按钮</p>
- <pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"mainwindow.h"</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QVBoxLayout&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QHBoxLayout&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QPushButton&gt;</span></span>
-
-MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent)
-&#123;
-    <span class="hljs-keyword">this</span>-&gt;setupUI();
-&#125;
-
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">MainWindow::setupUI</span><span class="hljs-params">()</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-keyword">auto</span> vbox = <span class="hljs-keyword">new</span> QVBoxLayout();
-    <span class="hljs-keyword">this</span>-&gt;setLayout(vbox);
-
-    <span class="hljs-keyword">auto</span> btn =<span class="hljs-keyword">new</span> QPushButton(<span class="hljs-string">"Click here"</span>);
-    <span class="hljs-keyword">auto</span> hbox = <span class="hljs-keyword">new</span> QHBoxLayout();
-    hbox-&gt;addStretch(<span class="hljs-number">1</span>);
-    hbox-&gt;addWidget(btn);
-    hbox-&gt;addStretch(<span class="hljs-number">1</span>);
-
-    vbox-&gt;addLayout(hbox);
-
-    <span class="hljs-built_in">connect</span>(btn, &amp;QPushButton::clicked, [=]()&#123;
-        btn-&gt;setText(<span class="hljs-string">"Changed"</span>);
-    &#125;);
-&#125;</code></pre></li>
+ <figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"mainwindow.h"</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QVBoxLayout&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QHBoxLayout&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QPushButton&gt;</span></span><br><br>MainWindow::MainWindow(QWidget *parent)<br>    : QWidget(parent)<br>&#123;<br>    <span class="hljs-keyword">this</span>-&gt;setupUI();<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">MainWindow::setupUI</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">auto</span> vbox = <span class="hljs-keyword">new</span> QVBoxLayout();<br>    <span class="hljs-keyword">this</span>-&gt;setLayout(vbox);<br><br>    <span class="hljs-keyword">auto</span> btn =<span class="hljs-keyword">new</span> QPushButton(<span class="hljs-string">"Click here"</span>);<br>    <span class="hljs-keyword">auto</span> hbox = <span class="hljs-keyword">new</span> QHBoxLayout();<br>    hbox-&gt;addStretch(<span class="hljs-number">1</span>);<br>    hbox-&gt;addWidget(btn);<br>    hbox-&gt;addStretch(<span class="hljs-number">1</span>);<br><br>    vbox-&gt;addLayout(hbox);<br><br>    <span class="hljs-built_in">connect</span>(btn, &amp;QPushButton::clicked, [=]()&#123;<br>        btn-&gt;setText(<span class="hljs-string">"Changed"</span>);<br>    &#125;);<br>&#125;<br></code></pre></td></tr></table></figure></li>
 <li><p>点击QC左侧项目，配置Android项目</p>
 <p>在Build步骤里，ABIs选择<strong>x86_64</strong>，Android build SDK选择<strong>android-25</strong></p>
 <p><img src="/images/QC2.png" srcset="/img/loading.gif" alt=""></p>

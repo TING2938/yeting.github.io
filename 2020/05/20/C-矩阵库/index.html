@@ -184,51 +184,13 @@
             <article class="markdown-body">
               <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>C++以其及其优异的计算速度在科学计算、工业工程等领域得到广泛的应用，在数值计算方面，调用矩阵库能简化编程过程，提高计算速度，下面介绍几种常用的矩阵库及其用法，此外，我也写了一个矩阵库在自己科研分析中<a href="https://ting2938.github.io/2020/05/22/C-%E7%9F%A9%E9%98%B5%E5%BA%93%EF%BC%882%EF%BC%89/" target="_blank" rel="noopener">C++矩阵库（2）</a>。</p>
 <h3 id="Eigen"><a href="#Eigen" class="headerlink" title="Eigen"></a>Eigen</h3><p><a href="http://eigen.tuxfamily.org/index.php?title=Main_Page" target="_blank" rel="noopener">Eigen</a>是采用C++模板技术编写的纯头文件库，用法如下：</p>
-<pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Eigen/Dense&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-function">Eigen::MatrixXd <span class="hljs-title">mat</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>;
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">3</span>; ++i)
-    &#123;
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j != <span class="hljs-number">4</span>; ++j)
-        &#123;
-            mat(i, j) = <span class="hljs-number">3</span>*i+<span class="hljs-number">5</span>*j;
-        &#125;
-    &#125;
-    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; mat &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
-&#125;</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Eigen/Dense&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">Eigen::MatrixXd <span class="hljs-title">mat</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">3</span>; ++i)<br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j != <span class="hljs-number">4</span>; ++j)<br>        &#123;<br>            mat(i, j) = <span class="hljs-number">3</span>*i+<span class="hljs-number">5</span>*j;<br>        &#125;<br>    &#125;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; mat &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="Armadillo"><a href="#Armadillo" class="headerlink" title="Armadillo"></a>Armadillo</h3><p><a href="http://arma.sourceforge.net/" target="_blank" rel="noopener">Armadillo</a>的语法与Matlab语法很相识，从Matlab迁移到Armadillo很方便，用法如下：</p>
-<pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Armadillo&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-function">arma::mat <span class="hljs-title">A</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>;
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">3</span>; ++i)
-    &#123;
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j != <span class="hljs-number">4</span>; ++j)
-        &#123;
-            A(i, j) = <span class="hljs-number">3</span>*i+<span class="hljs-number">5</span>*j;
-        &#125;
-    &#125;
-    A.<span class="hljs-built_in">print</span>(<span class="hljs-string">"A:"</span>);
-&#125;</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Armadillo&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">arma::mat <span class="hljs-title">A</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">3</span>; ++i)<br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j != <span class="hljs-number">4</span>; ++j)<br>        &#123;<br>            A(i, j) = <span class="hljs-number">3</span>*i+<span class="hljs-number">5</span>*j;<br>        &#125;<br>    &#125;<br>    A.<span class="hljs-built_in">print</span>(<span class="hljs-string">"A:"</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="Boost"><a href="#Boost" class="headerlink" title="Boost"></a>Boost</h3><p><a href="https://www.boost.org/" target="_blank" rel="noopener">Boost</a>在C++中地位非常高，被称为C++的准标准库，其中的ublas模块包含矩阵类，用法如下：</p>
-<pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;boost/numeric/ublas/matrix.hpp&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;boost/numeric/ublas/io.hpp&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-keyword">namespace</span> ublas = boost::numeric::ublas;
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-function">ublas::matrix&lt;<span class="hljs-keyword">double</span>&gt; <span class="hljs-title">A</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>)</span></span>;
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> i = <span class="hljs-number">0</span>; i &lt; A.size1(); ++i)
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> j = <span class="hljs-number">0</span>; j &lt; A.size2(); ++j)
-            A(i, j) = <span class="hljs-number">3</span>*i + j;
-	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; A &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-&#125;</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;boost/numeric/ublas/matrix.hpp&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;boost/numeric/ublas/io.hpp&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">namespace</span> ublas = boost::numeric::ublas;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">ublas::matrix&lt;<span class="hljs-keyword">double</span>&gt; <span class="hljs-title">A</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> i = <span class="hljs-number">0</span>; i &lt; A.size1(); ++i)<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> j = <span class="hljs-number">0</span>; j &lt; A.size2(); ++j)<br>            A(i, j) = <span class="hljs-number">3</span>*i + j;<br>	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; A &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
             </article>
             <hr>
             <div>
@@ -256,9 +218,9 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/05/21/Gromacs%E8%BD%A8%E8%BF%B9%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">
+                      <a href="/2020/05/22/C-%E7%9F%A9%E9%98%B5%E5%BA%93%EF%BC%882%EF%BC%89/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Gromacs轨迹分析工具</span>
+                        <span class="hidden-mobile">C++矩阵库（2）</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

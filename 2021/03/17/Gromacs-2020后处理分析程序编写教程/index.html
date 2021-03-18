@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>Gromacs轨迹分析工具 - Hexo</title>
+  <title>Gromacs-2020后处理分析程序编写教程 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -132,8 +132,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-05-21 19:38">
-                    2020年5月21日 晚上
+                  <time datetime="2021-03-17 09:26">
+                    2021年3月17日 上午
                   </time>
                 </div>
               
@@ -143,7 +143,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    35 字
+                    1k 字
                   </span>
                 
 
@@ -153,7 +153,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    1
+                    13
                      分钟
                   </span>
                 
@@ -182,8 +182,21 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="http://www.gromacs.org/" target="_blank" rel="noopener">Gromacs</a>是一款十分优秀的分子动力学软件，其并行化运行速度快，后处理命令丰富d</p>
+              <h2 id="起"><a href="#起" class="headerlink" title="起"></a>起</h2><p><a href="http://www.gromacs.org/" target="_blank" rel="noopener">Gromacs</a>是一款十分优秀的分子动力学软件，其并行化运行速度快，且本身自带丰富的后处理命令。但在科研过程中难免会出现自带分析工具难以满足我们需求的情况，这时候就需要我们自己针对Gromacs产生的轨迹文件编写符合我们需求的后处理程序。本文介绍了针对Gromacs-2020系列版本的轨迹后处理分析过程，程序编写基于本人在研究生期间开发的后处理框架，开发平台为Windows 10-Visual Studio Community 2019，在Windows上编写代码就可以在Windows上编译运行，也可以把代码Copy到Linux服务器上编译运行。</p>
+<h3 id="准备文件和工具"><a href="#准备文件和工具" class="headerlink" title="准备文件和工具"></a>准备文件和工具</h3><ol>
+<li><p>Gmx2020后处理框架</p>
+ <iframe src="https://onedrive.live.com/embed?cid=7E39B63375DD2896&resid=7E39B63375DD2896%2110282&authkey=ADQyMIEb66TTm5k" width="98" height="120" frameborder="0" scrolling="no"></iframe>
+</li>
+<li><p><a href="https://visualstudio.microsoft.com/zh-hans/vs/" target="_blank" rel="noopener">Visual Studio Community 2019</a></p>
+<p>安装时只需勾选<code>使用c++的桌面开发</code></p>
+</li>
+</ol>
+<p>准备完成后，解压缩后处理框架，进入<code>Gmx2020_PostAnalysis_for_VS2019/Gmx2020PostAnalysis/</code>目录中，双击<code>Gmx2020PostAnalysis.sln</code>即可打开VS2019工程。</p>
+<h2 id="承"><a href="#承" class="headerlink" title="承"></a>承</h2><h3 id="简单程序代码示例"><a href="#简单程序代码示例" class="headerlink" title="简单程序代码示例"></a>简单程序代码示例</h3><p>后处理程序由一个简单的示例引入：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">///&lt;讲注：开头注释，记录程序作者、时间、邮箱以及描述</span><br><span class="hljs-comment">/*  Author     : TING</span><br><span class="hljs-comment"> *  Date       : 2019/05/05</span><br><span class="hljs-comment"> *  Email      : yeting2938@hust.edu.cn</span><br><span class="hljs-comment"> *  Desc       : calculate density along axis in simulation.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">///&gt;</span><br><br><span class="hljs-comment">///&lt;讲注：头文件，包含常用库和函数</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;itp/gmx&gt;</span></span><br><span class="hljs-comment">///&gt;</span><br><br><span class="hljs-comment">///&lt;讲注：位于命名空间`itp`下的类`GmxHandle`里面定义了绝大多数在轨迹分析过程中会用到的数据以及函数，比如体系的拓扑结构、分子与原子的数目、分子的质量与电量等数据结构，获取分子位置、速度、受力等函数，会在下节详细讲解。这里是构造一个继承类，里面可以定义一些在本代码中会用到的数据以及函数。</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Handle</span> :</span> <span class="hljs-keyword">public</span> itp::GmxHandle<br>&#123;<br><span class="hljs-keyword">public</span>:<br>	<span class="hljs-keyword">using</span> GmxHandle::GmxHandle;<br><br><span class="hljs-keyword">public</span>:<br>	itp::boxd pos1;<br>	itp::matd posc1;<br>&#125;;<br><span class="hljs-comment">///&gt;</span><br><br><span class="hljs-comment">///&lt;讲注：`gmx_main`是一个宏，其参数`temp`是一个函数名称，可以把`gmx_main`当作`main`函数。</span><br>gmx_main(temp)<br><span class="hljs-comment">///&gt;</span><br>&#123;<br>	<span class="hljs-comment">///&lt;讲注：实例化一个`Handle`对象，其参数`argc`与`argv`定义在宏`gmx_main`里面</span><br>	<span class="hljs-function">Handle <span class="hljs-title">hd</span><span class="hljs-params">(argc, argv)</span></span>;<br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：该后处理框架对体系的分析基于`Gromacs`中组(Group)的概念，即仅对用户选择的组进行分析，选择的组里面包含了该组中所有原子的序号。这里可以定义该程序所需组的个数，然后为每一个组定义一个变量方便后面代码操作。</span><br>	hd.ngrps = <span class="hljs-number">1</span>; <span class="hljs-comment">// number of group(s);</span><br>	<span class="hljs-keyword">int</span> grp = <span class="hljs-number">0</span>;  <span class="hljs-comment">// selected group;</span><br>	<span class="hljs-comment">///&gt;</span><br><br>	<span class="hljs-comment">///&lt;讲注：在这里定义由命令行输入的参数，采用`Gromacs`自带参数解析系统，支持的变量类型有：</span><br>	<span class="hljs-comment">///      `int, int64, real, time, str, bool, rvec, enum` </span><br>	<span class="hljs-comment">///      详情可在`Gromacs`源代码文件`include/gromacs/commandline/pargs.h`中查看</span><br>	<span class="hljs-comment">///      注意：浮点数要用`real`类型，不能直接用`double`类型</span><br>	<span class="hljs-comment">/* add some user-defined pargs. here */</span><br>	<span class="hljs-keyword">int</span> nbin = <span class="hljs-number">100</span>;<br>	<span class="hljs-keyword">int</span> dim = <span class="hljs-number">2</span>;     <span class="hljs-comment">// 0(x), 1(y), 2(z);</span><br>	real lowPos = <span class="hljs-number">0</span>; <span class="hljs-comment">// nm;</span><br>	real upPos = <span class="hljs-number">30</span>; <span class="hljs-comment">// nm;</span><br><br>	<span class="hljs-comment">/// 在这里编写命令行参数接口</span><br>	hd.pa = &#123;<br>		&#123; <span class="hljs-string">"-nbin"</span>, FALSE, etINT,  &#123;&amp;nbin&#125;, <span class="hljs-string">"nbins."</span>&#125;,<br>		&#123; <span class="hljs-string">"-dim"</span>, FALSE, etINT, &#123;&amp;dim&#125;, <span class="hljs-string">"dim, 0(x), 1(y), 2(z)"</span>&#125;,<br>		&#123; <span class="hljs-string">"-up"</span>, FALSE, etREAL, &#123;&amp;upPos&#125;, <span class="hljs-string">"up position of region of molecule/ion (nm)"</span> &#125;,<br>		&#123; <span class="hljs-string">"-low"</span>, FALSE, etREAL, &#123;&amp;lowPos&#125;, <span class="hljs-string">"low position of region of molecule/ion (nm)"</span> &#125;<br>	&#125;;<br>	<span class="hljs-comment">///&gt;</span><br><br>	hd.fnm = &#123;<br>		&#123; efXVG, <span class="hljs-string">"-o"</span>, <span class="hljs-string">"analysisOutput"</span>, ffWRITE &#125;<br>	&#125;;<br><br>	hd.init();<br>	hd.readFirstFrame();<br><br>	hd.pos1 = hd.initPos(grp);<br>	hd.posc1 = hd.initPosc(grp);<br><br>	<span class="hljs-function">itp::vecd <span class="hljs-title">density</span><span class="hljs-params">(nbin)</span></span>;<br>	density.<span class="hljs-built_in">fill</span>(<span class="hljs-number">0</span>);<br>	<span class="hljs-keyword">double</span> dbin = (upPos - lowPos) / nbin;<br>	<span class="hljs-keyword">int</span> me = <span class="hljs-number">0</span>;<br><br>	<span class="hljs-comment">/* ---------------- main loop ----------------------- */</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		hd.loadPosition(hd.pos1, grp);<br>		hd.loadPositionCenter(hd.posc1, grp);<br><br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; hd.nmol[grp]; i++)<br>		&#123;<br>			<span class="hljs-keyword">if</span> (lowPos &lt;= hd.posc1(i, dim) &amp;&amp; hd.posc1(i, dim) &lt; upPos)<br>			&#123;<br>				me = (hd.posc1(i, dim) - lowPos) / dbin;<br>				density[me]++;<br>			&#125;<br>		&#125;<br>	&#125; <span class="hljs-keyword">while</span> (hd.readNextFrame());<br>	<span class="hljs-comment">/* --------------- main loop end -------------------- */</span><br><br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nbin; i++)<br>	&#123;<br>		density[i] /= hd.nframe;<br>	&#125;<br>	<br>	<span class="hljs-comment">/* ------------- for output ---------------*/</span><br>	<span class="hljs-keyword">auto</span> ofile = hd.openWrite(hd.get_opt2fn(<span class="hljs-string">"-o"</span>));<br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nbin; i++)<br>	&#123;<br>		fmt::<span class="hljs-built_in">print</span>(ofile, <span class="hljs-string">"&#123;:8.5f&#125; &#123;10.5f&#125;\n"</span>, lowPos + dbin / <span class="hljs-number">2</span> + dbin*i, density[i]);<br>	&#125;<br>	fclose(ofile);<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<p>以上程序统计指定范围内（<code>-low</code>与<code>-up</code>之间）、指定维度（<code>-dim</code>）分子的个数分布。下面将讲解这段程序。</p>
+<h2 id="转"><a href="#转" class="headerlink" title="转"></a>转</h2><h2 id="合"><a href="#合" class="headerlink" title="合"></a>合</h2>
             </article>
             <hr>
             <div>
@@ -213,18 +226,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/05/22/C-%E7%9F%A9%E9%98%B5%E5%BA%93%EF%BC%882%EF%BC%89/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++矩阵库（2）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/05/20/C-%E7%9F%A9%E9%98%B5%E5%BA%93/">
-                        <span class="hidden-mobile">C++矩阵库</span>
+                      <a href="/2020/11/17/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0-%EF%BC%89/">
+                        <span class="hidden-mobile">Linux常用命令（持续更新中...）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -441,7 +448,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Gromacs轨迹分析工具&nbsp;",
+        "Gromacs-2020后处理分析程序编写教程&nbsp;",
       ],
       cursorChar: "😘",
       typeSpeed: 50,
