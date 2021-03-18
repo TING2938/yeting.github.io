@@ -143,7 +143,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    340 字
+                    341 字
                   </span>
                 
 
@@ -183,22 +183,34 @@
             
             <article class="markdown-body">
               <h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p><a href="https://git-scm.com/" target="_blank" rel="noopener">Git</a>是一种版本控制的开源软件，由Linux之父Linus开发的。它是一种分布式版本控制系统，不需要服务器软件就可以进行版本控制，这使得源代码的发布以及多人协作时交流十分便捷，Git软件普遍预装在Linux各个发行版中，查看系统中的Git版本号：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git --version<br>git version 1.7.1<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs bash">$ git --version
+git version 1.7.1</code></pre>
 
 <h2 id="搭建远程Git服务器"><a href="#搭建远程Git服务器" class="headerlink" title="搭建远程Git服务器"></a>搭建远程Git服务器</h2><p>搭建远程Git服务器的要求很低，只需要本地机器能通过ssh访问远程服务器</p>
 <p>创建过程特别简单，首先在<strong>远程服务器</strong>中：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ mkdir -p ~/gitServer <span class="hljs-comment"># 创建一个目录来作为代码仓库</span><br>$ <span class="hljs-built_in">cd</span> ~/gitServer<br>$ git init <span class="hljs-comment"># 创建一个空的git仓库</span><br>$ git config receive.denyCurrentBranch ignore<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs bash">$ mkdir -p ~/gitServer <span class="hljs-comment"># 创建一个目录来作为代码仓库</span>
+$ <span class="hljs-built_in">cd</span> ~/gitServer
+$ git init <span class="hljs-comment"># 创建一个空的git仓库</span>
+$ git config receive.denyCurrentBranch ignore</code></pre>
 
 <p>至此远程Git服务器搭建<strong>完成</strong></p>
 <h2 id="在本地机器上进行源代码管理"><a href="#在本地机器上进行源代码管理" class="headerlink" title="在本地机器上进行源代码管理"></a>在本地机器上进行源代码管理</h2><ul>
 <li><p>首先，在本地<code>clone</code>远程仓库：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ mkdir user1<br>$ <span class="hljs-built_in">cd</span> user1<br>$ git <span class="hljs-built_in">clone</span> ssh://&lt;user&gt;@&lt;ip&gt;:&lt;port&gt;/path/to/.git  <span class="hljs-comment"># clone远程仓库到本地</span><br>$ <span class="hljs-built_in">cd</span> gitServer<br>$ ls -a <span class="hljs-comment"># 会有一个.git的隐藏文件夹</span><br>.  ..  .git<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs bash">$ mkdir user1
+$ <span class="hljs-built_in">cd</span> user1
+$ git <span class="hljs-built_in">clone</span> ssh://&lt;user&gt;@&lt;ip&gt;:&lt;port&gt;/path/to/.git  <span class="hljs-comment"># clone远程仓库到本地</span>
+$ <span class="hljs-built_in">cd</span> gitServer
+$ ls -a <span class="hljs-comment"># 会有一个.git的隐藏文件夹</span>
+.  ..  .git</code></pre>
 </li>
 <li><p>推送本地代码到远程服务器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ touch readme.md <span class="hljs-comment"># 创建一个文件</span><br>$ git add . <span class="hljs-comment"># 添加要推送的文件</span><br>$ git commit -m <span class="hljs-string">"First push"</span> <span class="hljs-comment"># 添加推送信息</span><br>$ git push <span class="hljs-comment"># 推送文件到远程服务器</span><br></code></pre></td></tr></table></figure>
+<pre><code class="hljs bash">$ touch readme.md <span class="hljs-comment"># 创建一个文件</span>
+$ git add . <span class="hljs-comment"># 添加要推送的文件</span>
+$ git commit -m <span class="hljs-string">"First push"</span> <span class="hljs-comment"># 添加推送信息</span>
+$ git push <span class="hljs-comment"># 推送文件到远程服务器</span></code></pre>
 </li>
 <li><p>远程服务器上看更新的文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ git reset --hard<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs bash">$ git reset --hard</code></pre>
 </li>
 </ul>
 

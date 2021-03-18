@@ -183,13 +183,41 @@
             
             <article class="markdown-body">
               <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在写C++控制台程序时，我们可能会给程序添加进度条，也就是要程序在同一行反复输出，可以用特殊字符实现。</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="在Windows下"><a href="#在Windows下" class="headerlink" title="在Windows下"></a>在Windows下</h3><figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">10</span>; ++i)<br>&#123;<br>    sleep(<span class="hljs-number">5</span>); <span class="hljs-comment">// do something</span><br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r"</span>);<br>    fflush(<span class="hljs-built_in">stdout</span>);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"i = %d"</span>, i);<br>&#125;<br></code></pre></td></tr></table></figure>
-<h3 id="在Linux下"><a href="#在Linux下" class="headerlink" title="在Linux下"></a>在Linux下</h3><figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">10</span>; ++i)<br>&#123;<br>    sleep(<span class="hljs-number">5</span>); <span class="hljs-comment">// do something</span><br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r\033[k"</span>);<br>    fflush(<span class="hljs-built_in">stdout</span>);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"i = %d"</span>, i);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="在Windows下"><a href="#在Windows下" class="headerlink" title="在Windows下"></a>在Windows下</h3><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">10</span>; ++i)
+&#123;
+    sleep(<span class="hljs-number">5</span>); <span class="hljs-comment">// do something</span>
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r"</span>);
+    fflush(<span class="hljs-built_in">stdout</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"i = %d"</span>, i);
+&#125;</code></pre>
+<h3 id="在Linux下"><a href="#在Linux下" class="headerlink" title="在Linux下"></a>在Linux下</h3><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">10</span>; ++i)
+&#123;
+    sleep(<span class="hljs-number">5</span>); <span class="hljs-comment">// do something</span>
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r\033[k"</span>);
+    fflush(<span class="hljs-built_in">stdout</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"i = %d"</span>, i);
+&#125;</code></pre>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在这里写一个函数<code>setScrollOutput()</code>来实现这一过程：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setScrollOutput</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> _WIN32</span><br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r"</span>);<br><span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span><br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r\033[k"</span>);<br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">// _WIN32</span></span><br>	fflush(<span class="hljs-built_in">stdout</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setScrollOutput</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> _WIN32</span>
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r"</span>);
+<span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span>
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"\r\033[k"</span>);
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">// _WIN32</span></span>
+	fflush(<span class="hljs-built_in">stdout</span>);
+&#125;</code></pre>
 <p>使用过程如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">10</span>; ++i)<br>&#123;<br>    sleep(<span class="hljs-number">5</span>); <span class="hljs-comment">// do something</span><br><br>    setScrollOutput();<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"i = %d"</span>, i);<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i != <span class="hljs-number">10</span>; ++i)
+&#123;
+    sleep(<span class="hljs-number">5</span>); <span class="hljs-comment">// do something</span>
+
+    setScrollOutput();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"i = %d"</span>, i);
+&#125;</code></pre>
 
             </article>
             <hr>

@@ -153,7 +153,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    29
+                    30
                      分钟
                   </span>
                 
@@ -183,7 +183,221 @@
             
             <article class="markdown-body">
               <p><a href="https://eigen.tuxfamily.org/dox/AsciiQuickReference.txt" target="_blank" rel="noopener">https://eigen.tuxfamily.org/dox/AsciiQuickReference.txt</a></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// A simple quickref for Eigen. Add anything that's missing.</span><br><span class="hljs-comment">// Main author: Keir Mierle</span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Eigen/Dense&gt;</span></span><br><br>Matrix&lt;<span class="hljs-keyword">double</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>&gt; A;               <span class="hljs-comment">// Fixed rows and cols. Same as Matrix3d.</span><br>Matrix&lt;<span class="hljs-keyword">double</span>, <span class="hljs-number">3</span>, Dynamic&gt; B;         <span class="hljs-comment">// Fixed rows, dynamic cols.</span><br>Matrix&lt;<span class="hljs-keyword">double</span>, Dynamic, Dynamic&gt; C;   <span class="hljs-comment">// Full dynamic. Same as MatrixXd.</span><br>Matrix&lt;<span class="hljs-keyword">double</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, RowMajor&gt; E;     <span class="hljs-comment">// Row major; default is column-major.</span><br>Matrix3f P, Q, R;                     <span class="hljs-comment">// 3x3 float matrix.</span><br>Vector3f x, y, z;                     <span class="hljs-comment">// 3x1 float matrix.</span><br>RowVector3f a, b, c;                  <span class="hljs-comment">// 1x3 float matrix.</span><br>VectorXd v;                           <span class="hljs-comment">// Dynamic column vector of doubles</span><br><span class="hljs-keyword">double</span> s;                            <br><br><span class="hljs-comment">// Basic usage</span><br><span class="hljs-comment">// Eigen          // Matlab           // comments</span><br>x.<span class="hljs-built_in">size</span>()          <span class="hljs-comment">// length(x)        // vector size</span><br>C.rows()          <span class="hljs-comment">// size(C,1)        // number of rows</span><br>C.cols()          <span class="hljs-comment">// size(C,2)        // number of columns</span><br>x(i)              <span class="hljs-comment">// x(i+1)           // Matlab is 1-based</span><br>C(i,j)            <span class="hljs-comment">// C(i+1,j+1)       //</span><br><br>A.resize(<span class="hljs-number">4</span>, <span class="hljs-number">4</span>);   <span class="hljs-comment">// Runtime error if assertions are on.</span><br>B.resize(<span class="hljs-number">4</span>, <span class="hljs-number">9</span>);   <span class="hljs-comment">// Runtime error if assertions are on.</span><br>A.resize(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>);   <span class="hljs-comment">// Ok; size didn't change.</span><br>B.resize(<span class="hljs-number">3</span>, <span class="hljs-number">9</span>);   <span class="hljs-comment">// Ok; only dynamic cols changed.</span><br>                  <br>A &lt;&lt; <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>,     <span class="hljs-comment">// Initialize A. The elements can also be</span><br>     <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>,     <span class="hljs-comment">// matrices, which are stacked along cols</span><br>     <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>;     <span class="hljs-comment">// and then the rows are stacked.</span><br>B &lt;&lt; A, A, A;     <span class="hljs-comment">// B is three horizontally stacked A's.</span><br>A.<span class="hljs-built_in">fill</span>(<span class="hljs-number">10</span>);       <span class="hljs-comment">// Fill A with all 10's.</span><br><br><span class="hljs-comment">// Eigen                                    // Matlab</span><br>MatrixXd::Identity(rows,cols)               <span class="hljs-comment">// eye(rows,cols)</span><br>C.setIdentity(rows,cols)                    <span class="hljs-comment">// C = eye(rows,cols)</span><br>MatrixXd::Zero(rows,cols)                   <span class="hljs-comment">// zeros(rows,cols)</span><br>C.setZero(rows,cols)                        <span class="hljs-comment">// C = zeros(rows,cols)</span><br>MatrixXd::Ones(rows,cols)                   <span class="hljs-comment">// ones(rows,cols)</span><br>C.setOnes(rows,cols)                        <span class="hljs-comment">// C = ones(rows,cols)</span><br>MatrixXd::Random(rows,cols)                 <span class="hljs-comment">// rand(rows,cols)*2-1            // MatrixXd::Random returns uniform random numbers in (-1, 1).</span><br>C.setRandom(rows,cols)                      <span class="hljs-comment">// C = rand(rows,cols)*2-1</span><br>VectorXd::LinSpaced(<span class="hljs-built_in">size</span>,low,high)          <span class="hljs-comment">// linspace(low,high,size)'</span><br>v.setLinSpaced(<span class="hljs-built_in">size</span>,low,high)               <span class="hljs-comment">// v = linspace(low,high,size)'</span><br>VectorXi::LinSpaced(((hi-low)/<span class="hljs-built_in">step</span>)+<span class="hljs-number">1</span>,      <span class="hljs-comment">// low:step:hi</span><br>                    low,low+<span class="hljs-built_in">step</span>*(<span class="hljs-built_in">size</span><span class="hljs-number">-1</span>))  <span class="hljs-comment">//</span><br><br><br><span class="hljs-comment">// Matrix slicing and blocks. All expressions listed here are read/write.</span><br><span class="hljs-comment">// Templated size versions are faster. Note that Matlab is 1-based (a size N</span><br><span class="hljs-comment">// vector is x(1)...x(N)).</span><br><span class="hljs-comment">// Eigen                           // Matlab</span><br>x.head(n)                          <span class="hljs-comment">// x(1:n)</span><br>x.head&lt;n&gt;()                        <span class="hljs-comment">// x(1:n)</span><br>x.tail(n)                          <span class="hljs-comment">// x(end - n + 1: end)</span><br>x.tail&lt;n&gt;()                        <span class="hljs-comment">// x(end - n + 1: end)</span><br>x.segment(i, n)                    <span class="hljs-comment">// x(i+1 : i+n)</span><br>x.segment&lt;n&gt;(i)                    <span class="hljs-comment">// x(i+1 : i+n)</span><br>P.block(i, j, rows, cols)          <span class="hljs-comment">// P(i+1 : i+rows, j+1 : j+cols)</span><br>P.block&lt;rows, cols&gt;(i, j)          <span class="hljs-comment">// P(i+1 : i+rows, j+1 : j+cols)</span><br>P.row(i)                           <span class="hljs-comment">// P(i+1, :)</span><br>P.col(j)                           <span class="hljs-comment">// P(:, j+1)</span><br>P.leftCols&lt;cols&gt;()                 <span class="hljs-comment">// P(:, 1:cols)</span><br>P.leftCols(cols)                   <span class="hljs-comment">// P(:, 1:cols)</span><br>P.middleCols&lt;cols&gt;(j)              <span class="hljs-comment">// P(:, j+1:j+cols)</span><br>P.middleCols(j, cols)              <span class="hljs-comment">// P(:, j+1:j+cols)</span><br>P.rightCols&lt;cols&gt;()                <span class="hljs-comment">// P(:, end-cols+1:end)</span><br>P.rightCols(cols)                  <span class="hljs-comment">// P(:, end-cols+1:end)</span><br>P.topRows&lt;rows&gt;()                  <span class="hljs-comment">// P(1:rows, :)</span><br>P.topRows(rows)                    <span class="hljs-comment">// P(1:rows, :)</span><br>P.middleRows&lt;rows&gt;(i)              <span class="hljs-comment">// P(i+1:i+rows, :)</span><br>P.middleRows(i, rows)              <span class="hljs-comment">// P(i+1:i+rows, :)</span><br>P.bottomRows&lt;rows&gt;()               <span class="hljs-comment">// P(end-rows+1:end, :)</span><br>P.bottomRows(rows)                 <span class="hljs-comment">// P(end-rows+1:end, :)</span><br>P.topLeftCorner(rows, cols)        <span class="hljs-comment">// P(1:rows, 1:cols)</span><br>P.topRightCorner(rows, cols)       <span class="hljs-comment">// P(1:rows, end-cols+1:end)</span><br>P.bottomLeftCorner(rows, cols)     <span class="hljs-comment">// P(end-rows+1:end, 1:cols)</span><br>P.bottomRightCorner(rows, cols)    <span class="hljs-comment">// P(end-rows+1:end, end-cols+1:end)</span><br>P.topLeftCorner&lt;rows,cols&gt;()       <span class="hljs-comment">// P(1:rows, 1:cols)</span><br>P.topRightCorner&lt;rows,cols&gt;()      <span class="hljs-comment">// P(1:rows, end-cols+1:end)</span><br>P.bottomLeftCorner&lt;rows,cols&gt;()    <span class="hljs-comment">// P(end-rows+1:end, 1:cols)</span><br>P.bottomRightCorner&lt;rows,cols&gt;()   <span class="hljs-comment">// P(end-rows+1:end, end-cols+1:end)</span><br><br><span class="hljs-comment">// Of particular note is Eigen's swap function which is highly optimized.</span><br><span class="hljs-comment">// Eigen                           // Matlab</span><br>R.row(i) = P.col(j);               <span class="hljs-comment">// R(i, :) = P(:, j)</span><br>R.col(j1).swap(mat1.col(j2));      <span class="hljs-comment">// R(:, [j1 j2]) = R(:, [j2, j1])</span><br><br><span class="hljs-comment">// Views, transpose, etc;</span><br><span class="hljs-comment">// Eigen                           // Matlab</span><br>R.adjoint()                        <span class="hljs-comment">// R'</span><br>R.transpose()                      <span class="hljs-comment">// R.' or conj(R')       // Read-write</span><br>R.diagonal()                       <span class="hljs-comment">// diag(R)               // Read-write</span><br>x.asDiagonal()                     <span class="hljs-comment">// diag(x)</span><br>R.transpose().colwise().reverse()  <span class="hljs-comment">// rot90(R)              // Read-write</span><br>R.rowwise().reverse()              <span class="hljs-comment">// fliplr(R)</span><br>R.colwise().reverse()              <span class="hljs-comment">// flipud(R)</span><br>R.replicate(i,j)                   <span class="hljs-comment">// repmat(P,i,j)</span><br><br><br><span class="hljs-comment">// All the same as Matlab, but matlab doesn't have *= style operators.</span><br><span class="hljs-comment">// Matrix-vector.  Matrix-matrix.   Matrix-scalar.</span><br>y  = M*x;          R  = P*Q;        R  = P*s;<br>a  = b*M;          R  = P - Q;      R  = s*P;<br>a *= M;            R  = P + Q;      R  = P/s;<br>                   R *= Q;          R  = s*P;<br>                   R += Q;          R *= s;<br>                   R -= Q;          R /= s;<br><br><span class="hljs-comment">// Vectorized operations on each element independently</span><br><span class="hljs-comment">// Eigen                       // Matlab</span><br>R = P.cwiseProduct(Q);         <span class="hljs-comment">// R = P .* Q</span><br>R = P.<span class="hljs-built_in">array</span>() * s.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P .* s</span><br>R = P.cwiseQuotient(Q);        <span class="hljs-comment">// R = P ./ Q</span><br>R = P.<span class="hljs-built_in">array</span>() / Q.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P ./ Q</span><br>R = P.<span class="hljs-built_in">array</span>() + s.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P + s</span><br>R = P.<span class="hljs-built_in">array</span>() - s.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P - s</span><br>R.<span class="hljs-built_in">array</span>() += s;                <span class="hljs-comment">// R = R + s</span><br>R.<span class="hljs-built_in">array</span>() -= s;                <span class="hljs-comment">// R = R - s</span><br>R.<span class="hljs-built_in">array</span>() &lt; Q.<span class="hljs-built_in">array</span>();         <span class="hljs-comment">// R &lt; Q</span><br>R.<span class="hljs-built_in">array</span>() &lt;= Q.<span class="hljs-built_in">array</span>();        <span class="hljs-comment">// R &lt;= Q</span><br>R.cwiseInverse();              <span class="hljs-comment">// 1 ./ P</span><br>R.<span class="hljs-built_in">array</span>().inverse();           <span class="hljs-comment">// 1 ./ P</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">sin</span>()                <span class="hljs-comment">// sin(P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">cos</span>()                <span class="hljs-comment">// cos(P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">pow</span>(s)               <span class="hljs-comment">// P .^ s</span><br>R.<span class="hljs-built_in">array</span>().square()             <span class="hljs-comment">// P .^ 2</span><br>R.<span class="hljs-built_in">array</span>().cube()               <span class="hljs-comment">// P .^ 3</span><br>R.cwiseSqrt()                  <span class="hljs-comment">// sqrt(P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">sqrt</span>()               <span class="hljs-comment">// sqrt(P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">exp</span>()                <span class="hljs-comment">// exp(P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">log</span>()                <span class="hljs-comment">// log(P)</span><br>R.cwiseMax(P)                  <span class="hljs-comment">// max(R, P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">max</span>(P.<span class="hljs-built_in">array</span>())       <span class="hljs-comment">// max(R, P)</span><br>R.cwiseMin(P)                  <span class="hljs-comment">// min(R, P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">min</span>(P.<span class="hljs-built_in">array</span>())       <span class="hljs-comment">// min(R, P)</span><br>R.cwiseAbs()                   <span class="hljs-comment">// abs(P)</span><br>R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">abs</span>()                <span class="hljs-comment">// abs(P)</span><br>R.cwiseAbs2()                  <span class="hljs-comment">// abs(P.^2)</span><br>R.<span class="hljs-built_in">array</span>().abs2()               <span class="hljs-comment">// abs(P.^2)</span><br>(R.<span class="hljs-built_in">array</span>() &lt; s).select(P,Q );  <span class="hljs-comment">// (R &lt; s ? P : Q)</span><br>R = (Q.<span class="hljs-built_in">array</span>()==<span class="hljs-number">0</span>).select(P,R) <span class="hljs-comment">// R(Q==0) = P(Q==0)</span><br>R = P.unaryExpr(ptr_fun(func)) <span class="hljs-comment">// R = arrayfun(func, P)   // with: scalar func(const scalar &amp;x);</span><br><br><br><span class="hljs-comment">// Reductions.</span><br><span class="hljs-keyword">int</span> r, c;<br><span class="hljs-comment">// Eigen                  // Matlab</span><br>R.minCoeff()              <span class="hljs-comment">// min(R(:))</span><br>R.maxCoeff()              <span class="hljs-comment">// max(R(:))</span><br>s = R.minCoeff(&amp;r, &amp;c)    <span class="hljs-comment">// [s, i] = min(R(:)); [r, c] = ind2sub(size(R), i);</span><br>s = R.maxCoeff(&amp;r, &amp;c)    <span class="hljs-comment">// [s, i] = max(R(:)); [r, c] = ind2sub(size(R), i);</span><br>R.sum()                   <span class="hljs-comment">// sum(R(:))</span><br>R.colwise().sum()         <span class="hljs-comment">// sum(R)</span><br>R.rowwise().sum()         <span class="hljs-comment">// sum(R, 2) or sum(R')'</span><br>R.prod()                  <span class="hljs-comment">// prod(R(:))</span><br>R.colwise().prod()        <span class="hljs-comment">// prod(R)</span><br>R.rowwise().prod()        <span class="hljs-comment">// prod(R, 2) or prod(R')'</span><br>R.trace()                 <span class="hljs-comment">// trace(R)</span><br>R.all()                   <span class="hljs-comment">// all(R(:))</span><br>R.colwise().all()         <span class="hljs-comment">// all(R)</span><br>R.rowwise().all()         <span class="hljs-comment">// all(R, 2)</span><br>R.any()                   <span class="hljs-comment">// any(R(:))</span><br>R.colwise().any()         <span class="hljs-comment">// any(R)</span><br>R.rowwise().any()         <span class="hljs-comment">// any(R, 2)</span><br><br><span class="hljs-comment">// Dot products, norms, etc.</span><br><span class="hljs-comment">// Eigen                  // Matlab</span><br>x.norm()                  <span class="hljs-comment">// norm(x).    Note that norm(R) doesn't work in Eigen.</span><br>x.squaredNorm()           <span class="hljs-comment">// dot(x, x)   Note the equivalence is not true for complex</span><br>x.dot(y)                  <span class="hljs-comment">// dot(x, y)</span><br>x.cross(y)                <span class="hljs-comment">// cross(x, y) Requires #include &lt;Eigen/Geometry&gt;</span><br><br><span class="hljs-comment">//// Type conversion</span><br><span class="hljs-comment">// Eigen                  // Matlab</span><br>A.cast&lt;<span class="hljs-keyword">double</span>&gt;();         <span class="hljs-comment">// double(A)</span><br>A.cast&lt;<span class="hljs-keyword">float</span>&gt;();          <span class="hljs-comment">// single(A)</span><br>A.cast&lt;<span class="hljs-keyword">int</span>&gt;();            <span class="hljs-comment">// int32(A)</span><br>A.real();                 <span class="hljs-comment">// real(A)</span><br>A.imag();                 <span class="hljs-comment">// imag(A)</span><br><span class="hljs-comment">// if the original type equals destination type, no work is done</span><br><br><span class="hljs-comment">// Note that for most operations Eigen requires all operands to have the same type:</span><br>MatrixXf F = MatrixXf::Zero(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>);<br>A += F;                <span class="hljs-comment">// illegal in Eigen. In Matlab A = A+F is allowed</span><br>A += F.cast&lt;<span class="hljs-keyword">double</span>&gt;(); <span class="hljs-comment">// F converted to double and then added (generally, conversion happens on-the-fly)</span><br><br><span class="hljs-comment">// Eigen can map existing memory into Eigen matrices.</span><br><span class="hljs-keyword">float</span> <span class="hljs-built_in">array</span>[<span class="hljs-number">3</span>];<br>Vector3f::Map(<span class="hljs-built_in">array</span>).<span class="hljs-built_in">fill</span>(<span class="hljs-number">10</span>);            <span class="hljs-comment">// create a temporary Map over array and sets entries to 10</span><br><span class="hljs-keyword">int</span> data[<span class="hljs-number">4</span>] = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;;<br><span class="hljs-function">Matrix2i <span class="hljs-title">mat2x2</span><span class="hljs-params">(data)</span></span>;                    <span class="hljs-comment">// copies data into mat2x2</span><br>Matrix2i::Map(data) = <span class="hljs-number">2</span>*mat2x2;           <span class="hljs-comment">// overwrite elements of data with 2*mat2x2</span><br>MatrixXi::Map(data, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) += mat2x2;      <span class="hljs-comment">// adds mat2x2 to elements of data (alternative syntax if size is not know at compile time)</span><br><br><span class="hljs-comment">// Solve Ax = b. Result stored in x. Matlab: x = A \ b.</span><br>x = A.ldlt().solve(b));  <span class="hljs-comment">// A sym. p.s.d.    #include &lt;Eigen/Cholesky&gt;</span><br>x = A.llt() .solve(b));  <span class="hljs-comment">// A sym. p.d.      #include &lt;Eigen/Cholesky&gt;</span><br>x = A.lu()  .solve(b));  <span class="hljs-comment">// Stable and fast. #include &lt;Eigen/LU&gt;</span><br>x = A.qr()  .solve(b));  <span class="hljs-comment">// No pivoting.     #include &lt;Eigen/QR&gt;</span><br>x = A.svd() .solve(b));  <span class="hljs-comment">// Stable, slowest. #include &lt;Eigen/SVD&gt;</span><br><span class="hljs-comment">// .ldlt() -&gt; .matrixL() and .matrixD()</span><br><span class="hljs-comment">// .llt()  -&gt; .matrixL()</span><br><span class="hljs-comment">// .lu()   -&gt; .matrixL() and .matrixU()</span><br><span class="hljs-comment">// .qr()   -&gt; .matrixQ() and .matrixR()</span><br><span class="hljs-comment">// .svd()  -&gt; .matrixU(), .singularValues(), and .matrixV()</span><br><br><span class="hljs-comment">// Eigenvalue problems</span><br><span class="hljs-comment">// Eigen                          // Matlab</span><br>A.eigenvalues();                  <span class="hljs-comment">// eig(A);</span><br><span class="hljs-function">EigenSolver&lt;Matrix3d&gt; <span class="hljs-title">eig</span><span class="hljs-params">(A)</span></span>;     <span class="hljs-comment">// [vec val] = eig(A)</span><br>eig.eigenvalues();                <span class="hljs-comment">// diag(val)</span><br>eig.eigenvectors();               <span class="hljs-comment">// vec</span><br><span class="hljs-comment">// For self-adjoint matrices use SelfAdjointEigenSolver&lt;&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="hljs c++"><span class="hljs-comment">// A simple quickref for Eigen. Add anything that's missing.</span>
+<span class="hljs-comment">// Main author: Keir Mierle</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Eigen/Dense&gt;</span></span>
+
+Matrix&lt;<span class="hljs-keyword">double</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>&gt; A;               <span class="hljs-comment">// Fixed rows and cols. Same as Matrix3d.</span>
+Matrix&lt;<span class="hljs-keyword">double</span>, <span class="hljs-number">3</span>, Dynamic&gt; B;         <span class="hljs-comment">// Fixed rows, dynamic cols.</span>
+Matrix&lt;<span class="hljs-keyword">double</span>, Dynamic, Dynamic&gt; C;   <span class="hljs-comment">// Full dynamic. Same as MatrixXd.</span>
+Matrix&lt;<span class="hljs-keyword">double</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, RowMajor&gt; E;     <span class="hljs-comment">// Row major; default is column-major.</span>
+Matrix3f P, Q, R;                     <span class="hljs-comment">// 3x3 float matrix.</span>
+Vector3f x, y, z;                     <span class="hljs-comment">// 3x1 float matrix.</span>
+RowVector3f a, b, c;                  <span class="hljs-comment">// 1x3 float matrix.</span>
+VectorXd v;                           <span class="hljs-comment">// Dynamic column vector of doubles</span>
+<span class="hljs-keyword">double</span> s;                            
+
+<span class="hljs-comment">// Basic usage</span>
+<span class="hljs-comment">// Eigen          // Matlab           // comments</span>
+x.<span class="hljs-built_in">size</span>()          <span class="hljs-comment">// length(x)        // vector size</span>
+C.rows()          <span class="hljs-comment">// size(C,1)        // number of rows</span>
+C.cols()          <span class="hljs-comment">// size(C,2)        // number of columns</span>
+x(i)              <span class="hljs-comment">// x(i+1)           // Matlab is 1-based</span>
+C(i,j)            <span class="hljs-comment">// C(i+1,j+1)       //</span>
+
+A.resize(<span class="hljs-number">4</span>, <span class="hljs-number">4</span>);   <span class="hljs-comment">// Runtime error if assertions are on.</span>
+B.resize(<span class="hljs-number">4</span>, <span class="hljs-number">9</span>);   <span class="hljs-comment">// Runtime error if assertions are on.</span>
+A.resize(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>);   <span class="hljs-comment">// Ok; size didn't change.</span>
+B.resize(<span class="hljs-number">3</span>, <span class="hljs-number">9</span>);   <span class="hljs-comment">// Ok; only dynamic cols changed.</span>
+                  
+A &lt;&lt; <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>,     <span class="hljs-comment">// Initialize A. The elements can also be</span>
+     <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>,     <span class="hljs-comment">// matrices, which are stacked along cols</span>
+     <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>;     <span class="hljs-comment">// and then the rows are stacked.</span>
+B &lt;&lt; A, A, A;     <span class="hljs-comment">// B is three horizontally stacked A's.</span>
+A.<span class="hljs-built_in">fill</span>(<span class="hljs-number">10</span>);       <span class="hljs-comment">// Fill A with all 10's.</span>
+
+<span class="hljs-comment">// Eigen                                    // Matlab</span>
+MatrixXd::Identity(rows,cols)               <span class="hljs-comment">// eye(rows,cols)</span>
+C.setIdentity(rows,cols)                    <span class="hljs-comment">// C = eye(rows,cols)</span>
+MatrixXd::Zero(rows,cols)                   <span class="hljs-comment">// zeros(rows,cols)</span>
+C.setZero(rows,cols)                        <span class="hljs-comment">// C = zeros(rows,cols)</span>
+MatrixXd::Ones(rows,cols)                   <span class="hljs-comment">// ones(rows,cols)</span>
+C.setOnes(rows,cols)                        <span class="hljs-comment">// C = ones(rows,cols)</span>
+MatrixXd::Random(rows,cols)                 <span class="hljs-comment">// rand(rows,cols)*2-1            // MatrixXd::Random returns uniform random numbers in (-1, 1).</span>
+C.setRandom(rows,cols)                      <span class="hljs-comment">// C = rand(rows,cols)*2-1</span>
+VectorXd::LinSpaced(<span class="hljs-built_in">size</span>,low,high)          <span class="hljs-comment">// linspace(low,high,size)'</span>
+v.setLinSpaced(<span class="hljs-built_in">size</span>,low,high)               <span class="hljs-comment">// v = linspace(low,high,size)'</span>
+VectorXi::LinSpaced(((hi-low)/<span class="hljs-built_in">step</span>)+<span class="hljs-number">1</span>,      <span class="hljs-comment">// low:step:hi</span>
+                    low,low+<span class="hljs-built_in">step</span>*(<span class="hljs-built_in">size</span><span class="hljs-number">-1</span>))  <span class="hljs-comment">//</span>
+
+
+<span class="hljs-comment">// Matrix slicing and blocks. All expressions listed here are read/write.</span>
+<span class="hljs-comment">// Templated size versions are faster. Note that Matlab is 1-based (a size N</span>
+<span class="hljs-comment">// vector is x(1)...x(N)).</span>
+<span class="hljs-comment">// Eigen                           // Matlab</span>
+x.head(n)                          <span class="hljs-comment">// x(1:n)</span>
+x.head&lt;n&gt;()                        <span class="hljs-comment">// x(1:n)</span>
+x.tail(n)                          <span class="hljs-comment">// x(end - n + 1: end)</span>
+x.tail&lt;n&gt;()                        <span class="hljs-comment">// x(end - n + 1: end)</span>
+x.segment(i, n)                    <span class="hljs-comment">// x(i+1 : i+n)</span>
+x.segment&lt;n&gt;(i)                    <span class="hljs-comment">// x(i+1 : i+n)</span>
+P.block(i, j, rows, cols)          <span class="hljs-comment">// P(i+1 : i+rows, j+1 : j+cols)</span>
+P.block&lt;rows, cols&gt;(i, j)          <span class="hljs-comment">// P(i+1 : i+rows, j+1 : j+cols)</span>
+P.row(i)                           <span class="hljs-comment">// P(i+1, :)</span>
+P.col(j)                           <span class="hljs-comment">// P(:, j+1)</span>
+P.leftCols&lt;cols&gt;()                 <span class="hljs-comment">// P(:, 1:cols)</span>
+P.leftCols(cols)                   <span class="hljs-comment">// P(:, 1:cols)</span>
+P.middleCols&lt;cols&gt;(j)              <span class="hljs-comment">// P(:, j+1:j+cols)</span>
+P.middleCols(j, cols)              <span class="hljs-comment">// P(:, j+1:j+cols)</span>
+P.rightCols&lt;cols&gt;()                <span class="hljs-comment">// P(:, end-cols+1:end)</span>
+P.rightCols(cols)                  <span class="hljs-comment">// P(:, end-cols+1:end)</span>
+P.topRows&lt;rows&gt;()                  <span class="hljs-comment">// P(1:rows, :)</span>
+P.topRows(rows)                    <span class="hljs-comment">// P(1:rows, :)</span>
+P.middleRows&lt;rows&gt;(i)              <span class="hljs-comment">// P(i+1:i+rows, :)</span>
+P.middleRows(i, rows)              <span class="hljs-comment">// P(i+1:i+rows, :)</span>
+P.bottomRows&lt;rows&gt;()               <span class="hljs-comment">// P(end-rows+1:end, :)</span>
+P.bottomRows(rows)                 <span class="hljs-comment">// P(end-rows+1:end, :)</span>
+P.topLeftCorner(rows, cols)        <span class="hljs-comment">// P(1:rows, 1:cols)</span>
+P.topRightCorner(rows, cols)       <span class="hljs-comment">// P(1:rows, end-cols+1:end)</span>
+P.bottomLeftCorner(rows, cols)     <span class="hljs-comment">// P(end-rows+1:end, 1:cols)</span>
+P.bottomRightCorner(rows, cols)    <span class="hljs-comment">// P(end-rows+1:end, end-cols+1:end)</span>
+P.topLeftCorner&lt;rows,cols&gt;()       <span class="hljs-comment">// P(1:rows, 1:cols)</span>
+P.topRightCorner&lt;rows,cols&gt;()      <span class="hljs-comment">// P(1:rows, end-cols+1:end)</span>
+P.bottomLeftCorner&lt;rows,cols&gt;()    <span class="hljs-comment">// P(end-rows+1:end, 1:cols)</span>
+P.bottomRightCorner&lt;rows,cols&gt;()   <span class="hljs-comment">// P(end-rows+1:end, end-cols+1:end)</span>
+
+<span class="hljs-comment">// Of particular note is Eigen's swap function which is highly optimized.</span>
+<span class="hljs-comment">// Eigen                           // Matlab</span>
+R.row(i) = P.col(j);               <span class="hljs-comment">// R(i, :) = P(:, j)</span>
+R.col(j1).swap(mat1.col(j2));      <span class="hljs-comment">// R(:, [j1 j2]) = R(:, [j2, j1])</span>
+
+<span class="hljs-comment">// Views, transpose, etc;</span>
+<span class="hljs-comment">// Eigen                           // Matlab</span>
+R.adjoint()                        <span class="hljs-comment">// R'</span>
+R.transpose()                      <span class="hljs-comment">// R.' or conj(R')       // Read-write</span>
+R.diagonal()                       <span class="hljs-comment">// diag(R)               // Read-write</span>
+x.asDiagonal()                     <span class="hljs-comment">// diag(x)</span>
+R.transpose().colwise().reverse()  <span class="hljs-comment">// rot90(R)              // Read-write</span>
+R.rowwise().reverse()              <span class="hljs-comment">// fliplr(R)</span>
+R.colwise().reverse()              <span class="hljs-comment">// flipud(R)</span>
+R.replicate(i,j)                   <span class="hljs-comment">// repmat(P,i,j)</span>
+
+
+<span class="hljs-comment">// All the same as Matlab, but matlab doesn't have *= style operators.</span>
+<span class="hljs-comment">// Matrix-vector.  Matrix-matrix.   Matrix-scalar.</span>
+y  = M*x;          R  = P*Q;        R  = P*s;
+a  = b*M;          R  = P - Q;      R  = s*P;
+a *= M;            R  = P + Q;      R  = P/s;
+                   R *= Q;          R  = s*P;
+                   R += Q;          R *= s;
+                   R -= Q;          R /= s;
+
+<span class="hljs-comment">// Vectorized operations on each element independently</span>
+<span class="hljs-comment">// Eigen                       // Matlab</span>
+R = P.cwiseProduct(Q);         <span class="hljs-comment">// R = P .* Q</span>
+R = P.<span class="hljs-built_in">array</span>() * s.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P .* s</span>
+R = P.cwiseQuotient(Q);        <span class="hljs-comment">// R = P ./ Q</span>
+R = P.<span class="hljs-built_in">array</span>() / Q.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P ./ Q</span>
+R = P.<span class="hljs-built_in">array</span>() + s.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P + s</span>
+R = P.<span class="hljs-built_in">array</span>() - s.<span class="hljs-built_in">array</span>();     <span class="hljs-comment">// R = P - s</span>
+R.<span class="hljs-built_in">array</span>() += s;                <span class="hljs-comment">// R = R + s</span>
+R.<span class="hljs-built_in">array</span>() -= s;                <span class="hljs-comment">// R = R - s</span>
+R.<span class="hljs-built_in">array</span>() &lt; Q.<span class="hljs-built_in">array</span>();         <span class="hljs-comment">// R &lt; Q</span>
+R.<span class="hljs-built_in">array</span>() &lt;= Q.<span class="hljs-built_in">array</span>();        <span class="hljs-comment">// R &lt;= Q</span>
+R.cwiseInverse();              <span class="hljs-comment">// 1 ./ P</span>
+R.<span class="hljs-built_in">array</span>().inverse();           <span class="hljs-comment">// 1 ./ P</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">sin</span>()                <span class="hljs-comment">// sin(P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">cos</span>()                <span class="hljs-comment">// cos(P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">pow</span>(s)               <span class="hljs-comment">// P .^ s</span>
+R.<span class="hljs-built_in">array</span>().square()             <span class="hljs-comment">// P .^ 2</span>
+R.<span class="hljs-built_in">array</span>().cube()               <span class="hljs-comment">// P .^ 3</span>
+R.cwiseSqrt()                  <span class="hljs-comment">// sqrt(P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">sqrt</span>()               <span class="hljs-comment">// sqrt(P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">exp</span>()                <span class="hljs-comment">// exp(P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">log</span>()                <span class="hljs-comment">// log(P)</span>
+R.cwiseMax(P)                  <span class="hljs-comment">// max(R, P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">max</span>(P.<span class="hljs-built_in">array</span>())       <span class="hljs-comment">// max(R, P)</span>
+R.cwiseMin(P)                  <span class="hljs-comment">// min(R, P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">min</span>(P.<span class="hljs-built_in">array</span>())       <span class="hljs-comment">// min(R, P)</span>
+R.cwiseAbs()                   <span class="hljs-comment">// abs(P)</span>
+R.<span class="hljs-built_in">array</span>().<span class="hljs-built_in">abs</span>()                <span class="hljs-comment">// abs(P)</span>
+R.cwiseAbs2()                  <span class="hljs-comment">// abs(P.^2)</span>
+R.<span class="hljs-built_in">array</span>().abs2()               <span class="hljs-comment">// abs(P.^2)</span>
+(R.<span class="hljs-built_in">array</span>() &lt; s).select(P,Q );  <span class="hljs-comment">// (R &lt; s ? P : Q)</span>
+R = (Q.<span class="hljs-built_in">array</span>()==<span class="hljs-number">0</span>).select(P,R) <span class="hljs-comment">// R(Q==0) = P(Q==0)</span>
+R = P.unaryExpr(ptr_fun(func)) <span class="hljs-comment">// R = arrayfun(func, P)   // with: scalar func(const scalar &amp;x);</span>
+
+
+<span class="hljs-comment">// Reductions.</span>
+<span class="hljs-keyword">int</span> r, c;
+<span class="hljs-comment">// Eigen                  // Matlab</span>
+R.minCoeff()              <span class="hljs-comment">// min(R(:))</span>
+R.maxCoeff()              <span class="hljs-comment">// max(R(:))</span>
+s = R.minCoeff(&amp;r, &amp;c)    <span class="hljs-comment">// [s, i] = min(R(:)); [r, c] = ind2sub(size(R), i);</span>
+s = R.maxCoeff(&amp;r, &amp;c)    <span class="hljs-comment">// [s, i] = max(R(:)); [r, c] = ind2sub(size(R), i);</span>
+R.sum()                   <span class="hljs-comment">// sum(R(:))</span>
+R.colwise().sum()         <span class="hljs-comment">// sum(R)</span>
+R.rowwise().sum()         <span class="hljs-comment">// sum(R, 2) or sum(R')'</span>
+R.prod()                  <span class="hljs-comment">// prod(R(:))</span>
+R.colwise().prod()        <span class="hljs-comment">// prod(R)</span>
+R.rowwise().prod()        <span class="hljs-comment">// prod(R, 2) or prod(R')'</span>
+R.trace()                 <span class="hljs-comment">// trace(R)</span>
+R.all()                   <span class="hljs-comment">// all(R(:))</span>
+R.colwise().all()         <span class="hljs-comment">// all(R)</span>
+R.rowwise().all()         <span class="hljs-comment">// all(R, 2)</span>
+R.any()                   <span class="hljs-comment">// any(R(:))</span>
+R.colwise().any()         <span class="hljs-comment">// any(R)</span>
+R.rowwise().any()         <span class="hljs-comment">// any(R, 2)</span>
+
+<span class="hljs-comment">// Dot products, norms, etc.</span>
+<span class="hljs-comment">// Eigen                  // Matlab</span>
+x.norm()                  <span class="hljs-comment">// norm(x).    Note that norm(R) doesn't work in Eigen.</span>
+x.squaredNorm()           <span class="hljs-comment">// dot(x, x)   Note the equivalence is not true for complex</span>
+x.dot(y)                  <span class="hljs-comment">// dot(x, y)</span>
+x.cross(y)                <span class="hljs-comment">// cross(x, y) Requires #include &lt;Eigen/Geometry&gt;</span>
+
+<span class="hljs-comment">//// Type conversion</span>
+<span class="hljs-comment">// Eigen                  // Matlab</span>
+A.cast&lt;<span class="hljs-keyword">double</span>&gt;();         <span class="hljs-comment">// double(A)</span>
+A.cast&lt;<span class="hljs-keyword">float</span>&gt;();          <span class="hljs-comment">// single(A)</span>
+A.cast&lt;<span class="hljs-keyword">int</span>&gt;();            <span class="hljs-comment">// int32(A)</span>
+A.real();                 <span class="hljs-comment">// real(A)</span>
+A.imag();                 <span class="hljs-comment">// imag(A)</span>
+<span class="hljs-comment">// if the original type equals destination type, no work is done</span>
+
+<span class="hljs-comment">// Note that for most operations Eigen requires all operands to have the same type:</span>
+MatrixXf F = MatrixXf::Zero(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>);
+A += F;                <span class="hljs-comment">// illegal in Eigen. In Matlab A = A+F is allowed</span>
+A += F.cast&lt;<span class="hljs-keyword">double</span>&gt;(); <span class="hljs-comment">// F converted to double and then added (generally, conversion happens on-the-fly)</span>
+
+<span class="hljs-comment">// Eigen can map existing memory into Eigen matrices.</span>
+<span class="hljs-keyword">float</span> <span class="hljs-built_in">array</span>[<span class="hljs-number">3</span>];
+Vector3f::Map(<span class="hljs-built_in">array</span>).<span class="hljs-built_in">fill</span>(<span class="hljs-number">10</span>);            <span class="hljs-comment">// create a temporary Map over array and sets entries to 10</span>
+<span class="hljs-keyword">int</span> data[<span class="hljs-number">4</span>] = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;;
+<span class="hljs-function">Matrix2i <span class="hljs-title">mat2x2</span><span class="hljs-params">(data)</span></span>;                    <span class="hljs-comment">// copies data into mat2x2</span>
+Matrix2i::Map(data) = <span class="hljs-number">2</span>*mat2x2;           <span class="hljs-comment">// overwrite elements of data with 2*mat2x2</span>
+MatrixXi::Map(data, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) += mat2x2;      <span class="hljs-comment">// adds mat2x2 to elements of data (alternative syntax if size is not know at compile time)</span>
+
+<span class="hljs-comment">// Solve Ax = b. Result stored in x. Matlab: x = A \ b.</span>
+x = A.ldlt().solve(b));  <span class="hljs-comment">// A sym. p.s.d.    #include &lt;Eigen/Cholesky&gt;</span>
+x = A.llt() .solve(b));  <span class="hljs-comment">// A sym. p.d.      #include &lt;Eigen/Cholesky&gt;</span>
+x = A.lu()  .solve(b));  <span class="hljs-comment">// Stable and fast. #include &lt;Eigen/LU&gt;</span>
+x = A.qr()  .solve(b));  <span class="hljs-comment">// No pivoting.     #include &lt;Eigen/QR&gt;</span>
+x = A.svd() .solve(b));  <span class="hljs-comment">// Stable, slowest. #include &lt;Eigen/SVD&gt;</span>
+<span class="hljs-comment">// .ldlt() -&gt; .matrixL() and .matrixD()</span>
+<span class="hljs-comment">// .llt()  -&gt; .matrixL()</span>
+<span class="hljs-comment">// .lu()   -&gt; .matrixL() and .matrixU()</span>
+<span class="hljs-comment">// .qr()   -&gt; .matrixQ() and .matrixR()</span>
+<span class="hljs-comment">// .svd()  -&gt; .matrixU(), .singularValues(), and .matrixV()</span>
+
+<span class="hljs-comment">// Eigenvalue problems</span>
+<span class="hljs-comment">// Eigen                          // Matlab</span>
+A.eigenvalues();                  <span class="hljs-comment">// eig(A);</span>
+<span class="hljs-function">EigenSolver&lt;Matrix3d&gt; <span class="hljs-title">eig</span><span class="hljs-params">(A)</span></span>;     <span class="hljs-comment">// [vec val] = eig(A)</span>
+eig.eigenvalues();                <span class="hljs-comment">// diag(val)</span>
+eig.eigenvectors();               <span class="hljs-comment">// vec</span>
+<span class="hljs-comment">// For self-adjoint matrices use SelfAdjointEigenSolver&lt;&gt;</span></code></pre>
             </article>
             <hr>
             <div>
