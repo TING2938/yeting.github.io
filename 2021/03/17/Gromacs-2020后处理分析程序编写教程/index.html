@@ -143,7 +143,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1k 字
+                    2.7k 字
                   </span>
                 
 
@@ -153,7 +153,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    13
+                    34
                      分钟
                   </span>
                 
@@ -205,7 +205,10 @@
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;itp/gmx&gt;</span></span>
 <span class="hljs-comment">///&gt;</span>
 
-<span class="hljs-comment">///&lt;讲注：位于命名空间`itp`下的类`GmxHandle`里面定义了绝大多数在轨迹分析过程中会用到的数据以及函数，比如体系的拓扑结构、分子与原子的数目、分子的质量与电量等数据结构，获取分子位置、速度、受力等函数，会在下节详细讲解。这里是构造一个继承类，里面可以定义一些在本代码中会用到的数据以及函数。</span>
+<span class="hljs-comment">///&lt;讲注：位于命名空间`itp`下的类`GmxHandle`里面定义了绝大多数在轨迹分析过程中</span>
+<span class="hljs-comment">/// 会用到的数据以及函数，比如体系的拓扑结构、分子与原子的数目、分子的质量与电量</span>
+<span class="hljs-comment">/// 等数据结构，获取分子位置、速度、受力等函数，会在下节详细讲解。这里是构造一个</span>
+<span class="hljs-comment">/// 继承类，里面可以定义一些在本代码中会用到的数据以及函数。</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Handle</span> :</span> <span class="hljs-keyword">public</span> itp::GmxHandle
 &#123;
 <span class="hljs-keyword">public</span>:
@@ -217,7 +220,8 @@
 &#125;;
 <span class="hljs-comment">///&gt;</span>
 
-<span class="hljs-comment">///&lt;讲注：`gmx_main`是一个宏，其参数`temp`是一个函数名称，可以把`gmx_main`当作`main`函数。</span>
+<span class="hljs-comment">///&lt;讲注：`gmx_main`是一个宏，其参数`temp`是一个函数名称，可以把`gmx_main`</span>
+<span class="hljs-comment">/// 当作`main`函数。</span>
 gmx_main(temp)
 <span class="hljs-comment">///&gt;</span>
 &#123;
@@ -225,7 +229,9 @@ gmx_main(temp)
 	<span class="hljs-function">Handle <span class="hljs-title">hd</span><span class="hljs-params">(argc, argv)</span></span>;
 	<span class="hljs-comment">///&gt;</span>
 
-	<span class="hljs-comment">///&lt;讲注：该后处理框架对体系的分析基于`Gromacs`中组(Group)的概念，即仅对用户选择的组进行分析，选择的组里面包含了该组中所有原子的序号。这里可以定义该程序所需组的个数，然后为每一个组定义一个变量方便后面代码操作。</span>
+	<span class="hljs-comment">///&lt;讲注：该后处理框架对体系的分析基于`Gromacs`中组(Group)的概念，即仅对用户</span>
+	<span class="hljs-comment">/// 选择的组进行分析，选择的组里面包含了该组中所有原子的序号。这里可以定义该程</span>
+	<span class="hljs-comment">/// 序所需组的个数，然后为每一个组定义一个变量方便后面代码操作。</span>
 	hd.ngrps = <span class="hljs-number">1</span>; <span class="hljs-comment">// number of group(s);</span>
 	<span class="hljs-keyword">int</span> grp = <span class="hljs-number">0</span>;  <span class="hljs-comment">// selected group;</span>
 	<span class="hljs-comment">///&gt;</span>
@@ -247,28 +253,58 @@ gmx_main(temp)
 		&#123; <span class="hljs-string">"-up"</span>, FALSE, etREAL, &#123;&amp;upPos&#125;, <span class="hljs-string">"up position of region of molecule/ion (nm)"</span> &#125;,
 		&#123; <span class="hljs-string">"-low"</span>, FALSE, etREAL, &#123;&amp;lowPos&#125;, <span class="hljs-string">"low position of region of molecule/ion (nm)"</span> &#125;
 	&#125;;
-	<span class="hljs-comment">///&gt;</span>
-
+	
+	<span class="hljs-comment">/// 在这里定义后处理过程中涉及到的输入/输出文件名称</span>
 	hd.fnm = &#123;
 		&#123; efXVG, <span class="hljs-string">"-o"</span>, <span class="hljs-string">"analysisOutput"</span>, ffWRITE &#125;
 	&#125;;
+	<span class="hljs-comment">///&gt;</span>
 
+	<span class="hljs-comment">///&lt;讲注：初始化，在这个函数内会处理命令行选项，选择分析组，分析拓扑信息，并</span>
+	<span class="hljs-comment">/// 计算组内原子的电荷量与质量。</span>
+	<span class="hljs-comment">/// 注：该函数有一个可选参数，默认为`true`，代表选择的组内具有同种分子，否则</span>
+	<span class="hljs-comment">/// 为`false`。</span>
 	hd.init();
-	hd.readFirstFrame();
+	<span class="hljs-comment">///&gt;</span>
 
+	<span class="hljs-comment">///&lt;讲注：读取第一帧轨迹数据。数据更新在`hd.fr`内。</span>
+	hd.readFirstFrame();
+	<span class="hljs-comment">///&gt;</span>
+
+	<span class="hljs-comment">///&lt;讲注：`hd.initPos(grp)`与`hd.initPosc(grp)`两个函数初始化两个矩阵类</span>
+	<span class="hljs-comment">/// 型数据结构，分别储存分子中原子轨迹信息与分子中心轨迹信息。函数的参数为选</span>
+	<span class="hljs-comment">/// 择组的组号。</span>
+	<span class="hljs-comment">/// `hd.initPos(grp)`返回的数据大小为: [分子个数]x[每个分子中原子个数]x[3]</span>
+	<span class="hljs-comment">/// `hd.initPosc(grp)`返回的数据大小为: [分子个数]x[3]</span>
 	hd.pos1 = hd.initPos(grp);
 	hd.posc1 = hd.initPosc(grp);
+	<span class="hljs-comment">///&gt;</span>
 
+	<span class="hljs-comment">///&lt;讲注：`itp::vecd`为一种数组类型，数组中每个元素类型为`double`，数组</span>
+	<span class="hljs-comment">/// 长度为`nbin`。函数`fill`指向数组中填充相同的数值。</span>
+	<span class="hljs-comment">/// 相似的数据结构还有：</span>
+	<span class="hljs-comment">/// `itp::veci`: `int`型数组</span>
+	<span class="hljs-comment">/// `itp::vecd`: `double`型数组</span>
+	<span class="hljs-comment">/// `itp::mati`: `int`型矩阵</span>
+	<span class="hljs-comment">/// `itp::matd`: `double`型矩阵</span>
+	<span class="hljs-comment">/// `itp::boxd`: `double`型三维矩阵</span>
+	<span class="hljs-comment">/// 这些类型为C++开源矩阵库Eigen(https://eigen.tuxfamily.org)中类型的别名</span>
 	<span class="hljs-function">itp::vecd <span class="hljs-title">density</span><span class="hljs-params">(nbin)</span></span>;
 	density.<span class="hljs-built_in">fill</span>(<span class="hljs-number">0</span>);
+	<span class="hljs-comment">///&gt;</span>
+
 	<span class="hljs-keyword">double</span> dbin = (upPos - lowPos) / nbin;
 	<span class="hljs-keyword">int</span> me = <span class="hljs-number">0</span>;
 
-	<span class="hljs-comment">/* ---------------- main loop ----------------------- */</span>
+	<span class="hljs-comment">/* ------------- main loop for each frame ----------------- */</span>
 	<span class="hljs-keyword">do</span>
 	&#123;
+		<span class="hljs-comment">///&lt;讲注：获取位置以及位置中心，并储存在相应的数据结构中，</span>
+		<span class="hljs-comment">/// `loadPositionCenter`还有第三个可选参数，默认为0（代表取质量中心）</span>
+		<span class="hljs-comment">/// 还有1（代表几何中心）和2（代表电荷中心）</span>
 		hd.loadPosition(hd.pos1, grp);
 		hd.loadPositionCenter(hd.posc1, grp);
+		<span class="hljs-comment">///&gt;</span>
 
 		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; hd.nmol[grp]; i++)
 		&#123;
@@ -281,24 +317,207 @@ gmx_main(temp)
 	&#125; <span class="hljs-keyword">while</span> (hd.readNextFrame());
 	<span class="hljs-comment">/* --------------- main loop end -------------------- */</span>
 
-	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nbin; i++)
-	&#123;
-		density[i] /= hd.nframe;
-	&#125;
+	density /= hd.nframe;
 	
 	<span class="hljs-comment">/* ------------- for output ---------------*/</span>
+	<span class="hljs-comment">///&lt;讲注：打开一个文件，文件名由命令行参数"-o"决定</span>
+	<span class="hljs-comment">/// `openWrite`函数还有第二个可选参数，默认为`true`，代表在文件开始处写入</span>
+	<span class="hljs-comment">/// 文件生成的相关信息（如路径、创建时间、命令行参数等）</span>
 	<span class="hljs-keyword">auto</span> ofile = hd.openWrite(hd.get_opt2fn(<span class="hljs-string">"-o"</span>));
+	<span class="hljs-comment">///&gt;</span>
+
 	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nbin; i++)
 	&#123;
+		<span class="hljs-comment">///&lt;讲注：输出数据到文件。这里输出操作采用的是一个</span>
+		<span class="hljs-comment">/// 开源库&#123;fmt&#125;(https://github.com/fmtlib/fmt)</span>
 		fmt::<span class="hljs-built_in">print</span>(ofile, <span class="hljs-string">"&#123;:8.5f&#125; &#123;10.5f&#125;\n"</span>, lowPos + dbin / <span class="hljs-number">2</span> + dbin*i, density[i]);
+		<span class="hljs-comment">///&gt;</span>
 	&#125;
 	fclose(ofile);
 
 	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 &#125;</code></pre>
 
-<p>以上程序统计指定范围内（<code>-low</code>与<code>-up</code>之间）、指定维度（<code>-dim</code>）分子的个数分布。下面将讲解这段程序。</p>
-<h2 id="转"><a href="#转" class="headerlink" title="转"></a>转</h2><h2 id="合"><a href="#合" class="headerlink" title="合"></a>合</h2>
+<p>以上程序统计指定范围内（<code>-low</code>与<code>-up</code>之间）、指定维度（<code>-dim</code>）分子的个数分布。</p>
+<h2 id="转"><a href="#转" class="headerlink" title="转"></a>转</h2><ul>
+<li><p>class <code>itp::GmxHandle</code></p>
+<p>位于命名空间<code>itp</code>下的类<code>GmxHandle</code>里面定义了绝大多数在轨迹分析过程中会用到的数据以及函数，比如体系的拓扑结构、分子与原子的数目、分子的质量与电量等数据结构，获取分子位置、速度、受力等函数</p>
+<ul>
+<li><p>数据成员</p>
+<ul>
+<li><p><strong>desc</strong>  (std::vector&lt;const char*&gt;)</p>
+<p>  描述本程序用途的字符串</p>
+</li>
+<li><p><strong>Lbox</strong>  (double[3])</p>
+<p>  模拟盒子的长度，每当采用loadPosition等函数读取轨迹都会更新</p>
+</li>
+<li><p><strong>grpname</strong>  (char**)</p>
+<p>  选择组的名称</p>
+</li>
+<li><p><strong>ngx</strong>      (int*)</p>
+<p>  选择组的中含有多少原子</p>
+</li>
+<li><p><strong>top</strong>      (t_topology*)</p>
+<p>  拓扑信息。里面包含所有拓扑信息</p>
+</li>
+<li><p><strong>ir</strong>       (t_inputrec*)</p>
+<p>  输入参数，包含mdp文件中所有信息</p>
+</li>
+<li><p><strong>dt</strong>       (double)</p>
+<p>  模拟时间步长，ps</p>
+</li>
+<li><p><strong>time</strong>     (double)</p>
+<p>  模拟的时刻</p>
+</li>
+<li><p><strong>preTime</strong>  (double)</p>
+<p>  模拟的上一步时刻</p>
+</li>
+<li><p><strong>index</strong>    (int**)</p>
+<p>  原子索引，包含选择的每一组中的原子序号</p>
+</li>
+<li><p><strong>fr</strong>       (t_trxframe*)</p>
+<p>  轨迹相关信息</p>
+</li>
+<li><p><strong>flags</strong>    (int)</p>
+<p>  flags，控制是否读取位置、速度或力，默认为（TRX_READ_X）</p>
+</li>
+<li><p><strong>ngrps</strong>    (int)</p>
+<p>  选择的组的数目，默认为1</p>
+</li>
+<li><p><strong>nframe</strong>   (int)</p>
+<p>  读取到的轨迹总帧数</p>
+</li>
+<li><p><strong>pa</strong>       (std::vector<t_pargs>)</p>
+<p>  储存命令行参数</p>
+</li>
+<li><p><strong>fnm</strong>      (std::vector<t_filenm>)</p>
+<p>  储存命令行文件输入/输出</p>
+</li>
+<li><p><strong>napm</strong>     (veci)</p>
+<p>  在选择的组中分子中包含的原子数</p>
+</li>
+<li><p><strong>nmol</strong>     (veci)</p>
+<p>  在选择的组中的分子数</p>
+</li>
+<li><p><strong>mass</strong>     (Vec<vecd>)</p>
+<p>  在选择的组中一个分子中每个原子的质量</p>
+</li>
+<li><p><strong>charge</strong>   (Vec<vecd>)</p>
+<p>  在选择的组中一个分子中每个原子的电荷量</p>
+</li>
+</ul>
+</li>
+<li><p>成员函数</p>
+<ul>
+<li><p><code>GmxHandle(int argc, char** argv)</code></p>
+<p>  构造函数</p>
+<p>  参数：<code>argc</code>与<code>argv</code>为<code>main()</code>函数的参数</p>
+</li>
+<li><p><code>void init(bool bFullMolecule=true)</code></p>
+<p>  初始化，在这个函数内会处理命令行选项，选择分析组，分析拓扑信息，并计算组内原子的电荷量与质量。</p>
+<p>  注：可选参数<code>bFullMolecule</code>，默认为<code>true</code>，代表选择的组内具有同种分子，否则为<code>false</code>。</p>
+</li>
+<li><p><code>bool readFirstFrame()</code></p>
+<p>  读取第一帧轨迹数据，</p>
+<p>  返回：是否读取成功</p>
+</li>
+<li><p><code>bool readNextFrame()</code></p>
+<p>  读取下一帧轨迹数据</p>
+<p>  返回：是否读取成功</p>
+</li>
+<li><p><code>boxd initPos(int grp)</code></p>
+<p>  初始化一个空的可以储存分子位置信息的数据结构</p>
+<p>  参数：<code>grp</code>为组号</p>
+</li>
+<li><p><code>matd initPosc(int grp)</code></p>
+<p>  初始化一个空的可以储存分子中心位置的结构</p>
+<p>  参数：<code>grp</code>为组号</p>
+</li>
+<li><p><code>void loadPosition(boxd&amp; pos, int grp)</code></p>
+<p>  读取位置信息，并储存到结构<code>pos</code>中，<code>grp</code>为组号</p>
+</li>
+<li><p><code>void loadPositionCenter(matd&amp; posc, int grp, int com=0)</code></p>
+<p>  读取位置中心信息，并储存到结构<code>pos</code>中，<code>grp</code>为组号</p>
+</li>
+<li><p><code>void loadVelocity(boxd&amp; vel, int grp)</code></p>
+<p>  读取速度信息，并储存到结构<code>vel</code>中，<code>grp</code>为组号</p>
+</li>
+<li><p><code>void loadVelocityCenter(matd&amp; velc, int grp)</code></p>
+<p>  读取速度中心信息，并储存到结构<code>velc</code>中，<code>grp</code>为组号</p>
+</li>
+<li><p><code>void loadForce(boxd&amp; force, int grp)</code></p>
+<p>  读取力信息，并储存到结构<code>force</code>中，<code>grp</code>为组号</p>
+</li>
+<li><p><code>void loadForceCenter(matd&amp; forcec, int grp)</code></p>
+<p>  读取力中心信息，并储存到结构<code>forcec</code>中，<code>grp</code>为组号</p>
+</li>
+<li><p><code>void loadLJParameter(int grp1, int grp2, matd&amp; c6, matd&amp; c12)</code></p>
+<p>  读取LJ参数信息，储存到<code>c6</code>和<code>c12</code>中，两组组号分别为<code>grp1</code>和<code>grp2</code></p>
+</li>
+<li><p><code>FILE* openWrite(std::string fnm, bool writeInfo=true)</code></p>
+<p>  讲注：打开一个文件</p>
+<p>  参数：</p>
+<p>  <code>fnm</code>：文件名</p>
+<p>  <code>writeInfo</code>： 可选参数，默认为<code>true</code>，代表在文件开始处写入文件生成的相关信息（如路径、创建时间、命令行参数等）</p>
+</li>
+<li><p><code>const char* get_ftp2fn(int ftp)</code></p>
+<p>  通过命令行参数类型获取文件名称</p>
+<p>  参数：</p>
+<p>  <code>ftp</code>：命令行参数类型，有<code>efXVG</code>、<code>efNDX</code>、<code>efTPR</code>、<code>efNDX</code>等值可选，可在文件<code>include/gromacs/fileio/filetypes.h</code>中查看完整可选范围。</p>
+</li>
+<li><p><code>const char* get_ftp2fn_null(int ftp)</code></p>
+<p>  同上</p>
+</li>
+<li><p><code>const char* get_opt2fn(const char* opt)</code></p>
+<p>  通过命令行选项获取文件名称</p>
+<p>  参数：</p>
+<p>  <code>opt</code>：命令行文件输入/输出选项</p>
+</li>
+<li><p><code>static double periodicity(double dx, double box)</code></p>
+<p>  静态成员函数，处理周期性问题</p>
+<p>  参数：</p>
+<p>  <code>dx</code>：两位置之差</p>
+<p>  <code>box</code>：在计算<code>dx</code>维度上的盒子长度</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>此后处理框架中用到的外部开源库</p>
+<ul>
+<li><p><a href="https://eigen.tuxfamily.org" target="_blank" rel="noopener">Eigen</a></p>
+<p>  一个开源的线性代数库，里面有方便使用的矩阵、向量等类型用法参照<a href="https://ting2938.github.io/2020/07/18/Eigen%E4%B8%8EMatlab%E6%93%8D%E4%BD%9C%E5%AF%B9%E7%85%A7" target="_blank" rel="noopener">Eigen与Matlab操作对照</a></p>
+<p>  在本框架中常用的数据结构有：</p>
+<p>  <code>itp::veci</code>: <code>int</code>型数组</p>
+<p>  <code>itp::vecd</code>: <code>double</code>型数组</p>
+<p>  <code>itp::mati</code>: <code>int</code>型矩阵</p>
+<p>  <code>itp::matd</code>: <code>double</code>型矩阵</p>
+<p>  <code>itp::boxd</code>: <code>double</code>型三维矩阵</p>
+</li>
+<li><p><a href="https://github.com/fmtlib/fmt" target="_blank" rel="noopener">fmt</a></p>
+<p>  一个开源的C++输出格式控制库，用法类似<code>Python</code>的格式化字符串方式，如</p>
+  <pre><code class="hljs c++"><span class="hljs-comment">// 输出到终端</span>
+fmt::<span class="hljs-built_in">print</span>(<span class="hljs-string">"Hello &#123;&#125;!\n"</span>, <span class="hljs-string">"world"</span>);
+fmt::<span class="hljs-built_in">print</span>(<span class="hljs-string">"4.2 + 2.1 = &#123;:5.2f&#125;"</span>, <span class="hljs-number">6.3</span>);
+
+<span class="hljs-comment">// 输出到文件</span>
+<span class="hljs-function">FILE* <span class="hljs-title">ofile</span><span class="hljs-params">(<span class="hljs-string">"output.dat"</span>, <span class="hljs-string">"w"</span>)</span></span>;
+fmt::<span class="hljs-built_in">print</span>(ofile, <span class="hljs-string">"Hello &#123;&#125;!\n"</span>, <span class="hljs-string">"world"</span>);
+<span class="hljs-function"><span class="hljs-built_in">std</span>::ofstream <span class="hljs-title">ofsfile</span><span class="hljs-params">(<span class="hljs-string">"output.dat"</span>)</span></span>;
+fmt::<span class="hljs-built_in">print</span>(ofsfile, <span class="hljs-string">"Hello &#123;&#125;!\n"</span>, <span class="hljs-string">"world"</span>);</code></pre>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="合"><a href="#合" class="headerlink" title="合"></a>合</h2><p>运用本框架进行Gromacs后处理分析过程中遇到问题可以联系我</p>
+<blockquote>
+<p>Name : 叶挺</p>
+<p>Email: <a href="mailto:yeting2938@hust.edu.cn">yeting2938@hust.edu.cn</a></p>
+</blockquote>
+
             </article>
             <hr>
             <div>
@@ -328,7 +547,7 @@ gmx_main(temp)
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2021/03/18/JHL,%20I%20Love%20You/">
+                      <a href="/5201/03/18/JHL,%20I%20Love%20You/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">JHL, I Love You</span>
                         <span class="visible-mobile">上一篇</span>
